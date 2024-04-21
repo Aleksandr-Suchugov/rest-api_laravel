@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cars;
-use Illuminate\Http\Request;
+use App\Http\Requests\CarsRequest;
 
 class CarsController extends Controller
 {
@@ -12,47 +12,34 @@ class CarsController extends Controller
      */
     public function index()
     {
-        //
+       return Cars::paginate(10);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CarsRequest $request)
     {
-        //
+        return Cars::create($request->validate());
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Cars $cars)
+    public function show($id)
     {
-        //
+        return Cars::findOrFail($id);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Cars $cars)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Cars $cars)
+    public function update(CarsRequest $request, Cars $cars)
     {
-        //
+        $cars->fill($request->validate());
+        return $cars->save();
     }
 
     /**
@@ -60,6 +47,9 @@ class CarsController extends Controller
      */
     public function destroy(Cars $cars)
     {
-        //
+        if ($cars->delete()) {
+            return response(content:null, status:404);
+        }
+        return null;
     }
 }
