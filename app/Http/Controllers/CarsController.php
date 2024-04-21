@@ -12,16 +12,32 @@ class CarsController extends Controller
      */
     public function index()
     {
-       return Cars::paginate(10);
+        $objList = Cars::all();
+        return view('/cars_list', [
+            'listCars'=> $objList,
+            'listHead'=> 'Содержимое таблицы cars:'
+        ]);
     }
 
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        return view('/add_cars', ['addCars'=> 'Добавить новое авто']);
+    }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(CarsRequest $request)
     {
-        return Cars::create($request->validate());
+        Cars::create([
+            'brand'=> $request-> brand,
+            'model'=> $request-> model,
+            'price'=> $request-> price
+        ]);
+        return redirect('/cars_list');
     }
 
     /**
